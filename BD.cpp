@@ -71,23 +71,23 @@ void BD::parsSheme(string schema)
     }
 }
 
-void BD::separateCommand(DL<string>& command)
+string BD::separateCommand(DL<string>& command)
 {
     if (command[0]=="SELECT")
     {
-        SELECT(command);
+        return SELECT(command);
     }
     else if (command[0] == "INSERT")
     {
-        INSERT(command);
+        return INSERT(command);
     }
     else if (command[0]=="DELETE")
     {
-        DELETE(command);
+        return DELETE(command);
     }
     else
     {
-        cout << "incorrect command\n";
+        return "incorrect command\n";
     }
 }
 
@@ -107,7 +107,7 @@ DL<string> BD::parsForInsert(string values)
     return res;
 }
 
-void BD::INSERT(DL<string>& command)
+string BD::INSERT(DL<string>& command)
 {
     string tableName = command[2];
     if (rqstForIntervention(tableName))
@@ -176,9 +176,9 @@ void BD::INSERT(DL<string>& command)
     }
     else
     {
-        cout << "Вмешательство запрещено\n";
-        return;
+        return "Вмешательство запрещено\n";
     }
+    return "0";
 
 
 
@@ -291,7 +291,7 @@ Pair<string, string> ParsingLexem(string str)
     return {one,two};
 }
 
-void BD::PrintColumn(print& ForPrint, DL<Pair<string, string>>& Lexems)
+string BD::PrintColumn(print& ForPrint, DL<Pair<string, string>>& Lexems)
 {
     int countColumn = Lexems.len;
     DL<DL<string>> table;
@@ -315,10 +315,13 @@ void BD::PrintColumn(print& ForPrint, DL<Pair<string, string>>& Lexems)
         }
 
     }
+    string res;
     for (int i = 0; i < Lexems.len; i++)
     {
+        res += Lexems[i].first + "." + Lexems[i].second;
         cout << Lexems[i].first << "." << Lexems[i].second << "\t";
     }
+    res += '\n';
     cout << "\n";
     int index = 0;
     DL<int> forbiddenIndexes;
@@ -333,22 +336,23 @@ void BD::PrintColumn(print& ForPrint, DL<Pair<string, string>>& Lexems)
                 continue;
             }
             string elem = table[i][index];
-
+            res += elem + "                   ";
             cout << elem << "                   ";
             
 
         
         }
-        
+        res += '\n';
         cout << "\n";
         index++;
         if(forbiddenIndexes.len == countColumn) break;
    }
-  
+
+   return res;
 
 }
 
-void BD::SELECT(DL<string>& command)
+string BD::SELECT(DL<string>& command)
 {
     int len = command.len;
     DL<Pair<string,string>> Lexems;
@@ -379,7 +383,7 @@ void BD::SELECT(DL<string>& command)
             
             for (int j=0;j<tables.len;j++)
             {
-                if (!rqstForIntervention(tables[j])) return;
+                if (!rqstForIntervention(tables[j])) return "forbidden";
             }
 
             for (int j=0;j<tables.len;j++)
@@ -455,13 +459,14 @@ void BD::SELECT(DL<string>& command)
     //     specialSelect(tables[i],allLexemFromWhere, ForPrint);
     // }
 
-    PrintColumn(ForPrint,Lexems);
+    string res = PrintColumn(ForPrint,Lexems);
 
 
     for (int j=0;j<tables.len;j++) 
     {
         allowIntervention(tables[j]);
     }
+    return res;
 
 
 }
@@ -857,8 +862,6 @@ void BD::readFile(DL<Pair<string,string>> allLexemFromWhere, print& ForPrint)
 
 
             ForPrint[nameOneTable][nameOneColumn].add(col);
-            
-          //ForPrint[nameOneTable][nameOneColumn].PRINT();
         
             if (numLastFile==numberlastFileForOnetable)
             {
@@ -924,13 +927,13 @@ DL<string> GetTablesFromDelete(DL<string>& command)
 }
 
 
-void  BD::DELETE(DL<string>& command)
+string BD::DELETE(DL<string>& command)
 {
     DL<string> tables = GetTablesFromDelete(command);
 
     for (int i = 0;i < tables.len; i++)
     {
-    if (!rqstForIntervention(tables[i])) return;
+    if (!rqstForIntervention(tables[i])) return "forbidden";
     }
     for (int i = 0; i < tables.len; i++)
     {
@@ -997,7 +1000,7 @@ void  BD::DELETE(DL<string>& command)
             }
         }
     }
-
+    return "0";
     for (int i = 0; i < tables.len; i++)
     {
         WriteInFile(ForPrint, tables[i]);

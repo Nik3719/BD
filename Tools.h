@@ -7,7 +7,7 @@ using namespace std;
 DL<string> splitString(const string& str);
 string input();
 string PlusOne(string& num);
-
+void* clear(void* ptr, int value, size_t num);
 template<typename T, typename T1>
 struct Pair
 {
