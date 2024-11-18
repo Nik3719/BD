@@ -3,7 +3,7 @@
 
 using namespace std;
 
-
+void clear(void *buffer, int value, size_t bufSize);
 DL<string> splitString(const string& str);
 string input();
 string PlusOne(string& num);

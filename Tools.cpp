@@ -1,5 +1,13 @@
 #include"Tools.h"
 
+void clear(void *buffer, int value, size_t bufSize) 
+{
+    unsigned char *ptr = (unsigned char *)buffer;
+    for (size_t i = 0; i < bufSize; i++) {
+        ptr[i] = (unsigned char)value;
+    }
+}
+
 
 DL<string> splitString(const string& str)
 {
