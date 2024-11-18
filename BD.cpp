@@ -770,23 +770,10 @@ Tree GetTree(DL<string>& command, DL<Pair<string,string>>& Lexems, DL<Pair<strin
         {
             AndOr = true;
             miniTree.TINSERT(command[i]);
-            cout << command[i] << '\n';
-
-            operatorEqual[indexOperatorEqual].PRINT(operatorEqual[indexOperatorEqual].root);
-            cout << "\n\n\n";
 
             miniTree.JoinTree(miniTree.root, operatorEqual[indexOperatorEqual++].root);
-            cout << "\n\n\n";
-            miniTree.PRINT(miniTree.root);
-            cout << "\n\n\n";
-            operatorEqual[indexOperatorEqual].PRINT(operatorEqual[indexOperatorEqual].root);
-            cout << "\n\n\n";
 
             miniTree.JoinTree(miniTree.root, operatorEqual[indexOperatorEqual++].root);
-            cout << "\n\n\n";
-            
-            miniTree.PRINT(miniTree.root);
-            cout << "\n\n\n";
 
             operatorEqual.LDPUSHT(miniTree);
             if (!operatorsTree.root->left)
@@ -798,14 +785,7 @@ Tree GetTree(DL<string>& command, DL<Pair<string,string>>& Lexems, DL<Pair<strin
             {
                 operatorsTree = miniTree;
             }
-
-
-
-
-            operatorsTree.PRINT(operatorsTree.root);
-            cout << "\n\n\n";
             miniTree.Allocation(miniTree.root);
-            //int a=0;
         }
     }
     if(!AndOr)
